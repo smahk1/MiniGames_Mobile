@@ -1,6 +1,6 @@
 import 'package:flame/game.dart';
 
-class wam extends FlameGame{
+class WAM extends FlameGame{
   @override
   Future<void> onLoad() async {
     
