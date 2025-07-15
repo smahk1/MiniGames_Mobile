@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'game_page.dart';  // We'll make this later
-import 'MiniGame1.dart'; // For the first mini-game
+import 'MiniGame1.dart'; // For the first mini-game test 2
 
 
 void main() {
