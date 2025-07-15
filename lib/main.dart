@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'game_page.dart';  // We'll make this later
-
+import 'MiniGame1.dart'; // For the first mini-game
 
 
 void main() {
@@ -17,7 +17,8 @@ class MiniGames extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
-        '/game': (context) => GamePage(), // Placeholder for now
+        '/game': (context) => GamePage(),
+        '/MG1': (context) => GamePage(), // Placeholder for now
       },
     );
   }
