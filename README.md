@@ -1,3 +1,3 @@
-# project_mini_games
+# MiniGames Mobile
 
 A new Flutter project.
