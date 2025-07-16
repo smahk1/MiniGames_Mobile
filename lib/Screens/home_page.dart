@@ -8,7 +8,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/game');
+            Navigator.pushNamed(context, '/game_select');
           },
           child: Text("Start Game"),
         ),
