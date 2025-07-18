@@ -5,6 +5,8 @@ import 'package:project_mini_games/game_screen.dart';
 
 
 class MiniGameSelectScreen extends StatelessWidget {
+  const MiniGameSelectScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +15,7 @@ class MiniGameSelectScreen extends StatelessWidget {
     leading: IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
-        Navigator.pop(context); // 👈 Go back to Home
+        Navigator.pop(context); // Go back to Home
       },
     ),
   ),
