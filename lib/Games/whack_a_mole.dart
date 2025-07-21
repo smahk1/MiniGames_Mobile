@@ -1,60 +1,73 @@
 import 'dart:math';
 import 'package:flame/game.dart';
 import 'package:flame/components.dart';
-import 'package:project_mini_games/Game_Components/WAM/mole.dart';
 import 'package:flutter/material.dart';
+import 'package:project_mini_games/Game_Components/WAM/mole.dart';
 
 class WhackAMole extends FlameGame {
+  final List<Vector2> molePositions = [
+    Vector2(100, 350),
+    Vector2(220, 370),
+    Vector2(340, 360),
+    Vector2(460, 380),
+    Vector2(580, 370),
+    Vector2(700, 390),
+  ];
+  // Decides how many moles to animate at once
+  int animateNum = 2; // For every increment of 1 in [animateNum] decrement the value of [count] in spawnTimer() by 1
+
+  final Random rng = Random();
+  final double initialTime = 30.0;
+
   late List<Mole> moles;
   late Timer spawnTimer;
   late Timer gameTimer;
 
-  final Random random = Random();
-  int score = 0;
-  double timeLeft = 30.0;
-  final double initialTime = 30.0;
-
   late TextComponent scoreText;
   late TextComponent timerText;
 
+  int score = 0;
+  double timeLeft = 0.0;
   bool gameOver = false;
 
   @override
   Future<void> onLoad() async {
-    super.onLoad();
-
-    // Background
-    final background = SpriteComponent()
+    final bg = SpriteComponent()
       ..sprite = await loadSprite('background.png')
       ..size = size
       ..anchor = Anchor.topLeft
       ..priority = -1;
-    add(background);
+    add(bg);
 
-    await Future.delayed(Duration.zero);
+    timeLeft = initialTime;
 
-    final screenWidth = size.x;
-    final screenHeight = size.y;
+    // Score & Timer UI
+    scoreText = TextComponent(
+      text: 'Score: 0',
+      anchor: Anchor.topLeft,
+      position: Vector2(10, 10),
+      textRenderer: TextPaint(
+        style: const TextStyle(fontSize: 24, color: Colors.black),
+      ),
+    );
+    add(scoreText);
 
-    const gridCols = 3;
-    const gridRows = 3;
-    final moleSize = screenWidth / (gridCols * 6);
+    timerText = TextComponent(
+      text: 'Time: ${initialTime.toInt()}',
+      anchor: Anchor.topRight,
+      position: Vector2(size.x - 10, 10),
+      textRenderer: TextPaint(
+        style: const TextStyle(fontSize: 24, color: Colors.black),
+      ),
+    );
+    add(timerText);
 
-    final horizontalSpacing =
-        (screenWidth - (gridCols * moleSize)) / (gridCols + 1);
-    final verticalSpacing =
-        (screenHeight - (gridRows * moleSize)) / (gridRows + 1);
-
-    moles = List.generate(9, (i) {
-      final col = i % gridCols;
-      final row = i ~/ gridCols;
-
-      final x = horizontalSpacing + col * (moleSize + horizontalSpacing);
-      final y = verticalSpacing + row * (moleSize + verticalSpacing);
-
+    // Spawn moles manually by mapping each mole to its position in predefined vector list.
+    moles = molePositions.map((pos) {
       final mole = Mole(
-        position: Vector2(x + moleSize / 2, y + moleSize / 2),
-        size: Vector2.all(moleSize),
+        position: pos,
+        whackFrameRange: [4, 6], 
+        size: Vector2.all(80),
         onWhack: () {
           if (!gameOver) {
             score++;
@@ -62,48 +75,31 @@ class WhackAMole extends FlameGame {
           }
         },
       );
-
       add(mole);
       return mole;
-    });
+    }).toList();
 
-    // Score Text
-    scoreText = TextComponent(
-      text: 'Score: 0',
-      position: Vector2(10, 10),
-      anchor: Anchor.topLeft,
-      textRenderer: TextPaint(
-        style: TextStyle(fontSize: 24, color: Colors.white),
-      ),
-      priority: 1,
-    );
-    add(scoreText);
+    spawnTimer = Timer(0.2, onTick: () {
+  if (gameOver) return;
 
-    // Timer Text
-    timerText = TextComponent(
-      text: 'Time: ${initialTime.toInt()}',
-      position: Vector2(size.x - 10, 10),
-      anchor: Anchor.topRight,
-      textRenderer: TextPaint(
-        style: TextStyle(fontSize: 24, color: Colors.white),
-      ),
-      priority: 1,
-    );
-    add(timerText);
+  final activeMoles = moles.where((m) => m.isVisible).toList();
 
-    // Mole Pop-up Timer
-    spawnTimer = Timer(1.5, repeat: true, onTick: () {
-      if (!gameOver) {
-        final mole = moles[random.nextInt(moles.length)];
-        mole.popUp();
-      }
-    });
+  if (activeMoles.length < animateNum) {
+    final inactiveMoles = moles.where((m) => !m.isVisible && !m.isCoolingDown).toList();
+    inactiveMoles.shuffle();
+    // This ensures that we dont try to display more moles than are available
+    final count = animateNum.clamp(0, inactiveMoles.length);
+    // For every increment of 1 in [animateNum] decrement the value of [count] by 1
+    // God knows why this works, but it does.
+     for (int i = 0; i < count-1; i++) {
+      inactiveMoles[i].show();
+    }
+  }
+}, repeat: true);
 
-    // Game Timer
-    gameTimer = Timer(initialTime, onTick: () {
-      endGame();
-    });
+    gameTimer = Timer(initialTime, onTick: endGame); // Ends the game when time runs out. The first value defines the time limit for the time.
 
+    // Start both timers
     spawnTimer.start();
     gameTimer.start();
   }
@@ -111,33 +107,32 @@ class WhackAMole extends FlameGame {
   @override
   void update(double dt) {
     super.update(dt);
-
+    // Updating timers
     if (!gameOver) {
       spawnTimer.update(dt);
       gameTimer.update(dt);
 
-      timeLeft -= dt;
+      timeLeft -= dt;   // Since time left is a double value it stores only the whole number values of dt in seconds.
       if (timeLeft < 0) timeLeft = 0;
+
       timerText.text = 'Time: ${timeLeft.toInt()}';
     }
   }
-
+  // Triggers game over screen and haults the game.
   void endGame() {
     gameOver = true;
     spawnTimer.stop();
     gameTimer.stop();
     timerText.text = 'Time: 0';
-    print('Game Over! Final Score: $score');
+    print('Game Over. Score: $score');
   }
 
-  // Public method to pause the game
   void pauseGame() {
     pauseEngine();
     spawnTimer.stop();
     gameTimer.stop();
   }
 
-  // Public method to resume the game
   void resumeGame() {
     resumeEngine();
     if (!gameOver) {
@@ -146,7 +141,6 @@ class WhackAMole extends FlameGame {
     }
   }
 
-  // Public method to reset the game
   void resetGame() {
     score = 0;
     timeLeft = initialTime;
@@ -155,12 +149,8 @@ class WhackAMole extends FlameGame {
     scoreText.text = 'Score: 0';
     timerText.text = 'Time: ${initialTime.toInt()}';
 
-    spawnTimer.stop();
-    gameTimer.stop();
-
-    spawnTimer.start();
-    gameTimer.start();
-
-    resumeEngine(); // Also resumes the game loop
+    resumeEngine();
+    spawnTimer..stop()..start();
+    gameTimer..stop()..start();
   }
 }
