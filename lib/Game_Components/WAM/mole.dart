@@ -1,103 +1,129 @@
+import 'dart:ui';
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
-import 'package:flutter/foundation.dart';
+import 'package:project_mini_games/Games/whack_a_mole.dart';
 
-class Mole extends SpriteAnimationComponent with TapCallbacks {
+class Mole extends SpriteAnimationComponent with HasGameReference<WhackAMole>, TapCallbacks {
   final VoidCallback? onWhack;
 
   Mole({
-    Vector2? size,
+    required this.whackFrameRange, // Range of frames for hit detection.
     Vector2? position,
+    Vector2? size,
     this.onWhack,
   }) : super(
-          anchor: Anchor.center,
-          size: size ?? Vector2(50, 50),
           position: position ?? Vector2.zero(),
+          size: size ?? Vector2.all(50),
+          anchor: Anchor.center,
         );
+  // Animation cooldown
+  double cooldownTimer = 0;
+  final double cooldownDuration = 1.5; // Customize as needed
+  bool isCoolingDown = false;      
 
-  late final SpriteAnimation idleAnimation;
+  late final SpriteAnimation popUpAnimation;
   late final SpriteAnimation whackAnimation;
+  late final SpriteAnimation idleAnimation;
 
-  bool canWhack = false;
   bool isVisible = false;
+  bool canWhack = false;
+  final List<int> whackFrameRange;
 
-  double whackElapsed = 0.0;
-  final double whackDuration = 0.2 * 5;
-
-  @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-
-    final frame0 = await Sprite.load('/mole_0.png');
-    final frame1 = await Sprite.load('/mole_1.png');
-    final frame2 = await Sprite.load('/mole_2.png');
-    final frame3 = await Sprite.load('/mole_3.png');
-    final frame4 = await Sprite.load('/mole_4.png');
-
-    idleAnimation = SpriteAnimation.spriteList([frame0], stepTime: 1.0);
-    whackAnimation =
-        SpriteAnimation.spriteList([frame0, frame1, frame2, frame3, frame4], stepTime: 0.2);
-
-    animation = idleAnimation;
-  }
+  double whackTimer = 0.0;
+  final double whackDuration = 1.0;
 
   @override
-  void onTapDown(TapDownEvent event) {
-    super.onTapDown(event);
+Future<void> onLoad() async {
+  final molePopUp = await Future.wait([
+    Sprite.load('mole_001.png'),
+    Sprite.load('mole_002.png'),
+    Sprite.load('mole_003.png'),
+    Sprite.load('mole_004.png'),
+    Sprite.load('mole_005.png'),
+    Sprite.load('mole_006.png'),
+  ]);
 
-    if (canWhack) {
-      animation = whackAnimation;
-      whackElapsed = 0.0;
-      canWhack = false;
-      onWhack?.call(); // callback to notify game
-      print('Whacked!');
-    }
-  }
+  final whackFrames = await Future.wait([
+    Sprite.load('whacked1.png'),
+    Sprite.load('whacked2.png'),
+    Sprite.load('whacked3.png'),
+    Sprite.load('whacked4.png'),
+    Sprite.load('whacked5.png'),
+    Sprite.load('whacked6.png'),
+    Sprite.load('whacked7.png'),
+    Sprite.load('whacked8.png'),
+    Sprite.load('whacked9.png'),
+    // Sprite.load('whacked.10png'),
+    // Sprite.load('whacked.11png'),
+    // Sprite.load('whacked.12png'),
+    // Sprite.load('whacked.13png'),
+  ]);
 
-  void popUp() {
-    if (isVisible) return;
-    isVisible = true;
-    canWhack = true;
+  idleAnimation = SpriteAnimation.spriteList([molePopUp[0]], stepTime: 1);
+  whackAnimation = SpriteAnimation.spriteList(whackFrames, stepTime: 0.1);
+  popUpAnimation = SpriteAnimation.spriteList(molePopUp, stepTime: 0.15);
 
-    add(
-      MoveByEffect(
-        Vector2(0, -40),
-        EffectController(duration: 0.2),
-        onComplete: () {
-          Future.delayed(const Duration(milliseconds: 500), () {
-            hide();
-          });
-        },
-      ),
-    );
-  }
+  animation = idleAnimation;
+}
 
-  void hide() {
-    if (!isVisible) return;
+@override
+void onTapDown (TapDownEvent event) {
+  super.onTapDown(event);
+
+  if (!canWhack) return;
+
+  final currentFrame = animationTicker?.currentIndex ?? -1;
+  if (currentFrame >= whackFrameRange[0] &&
+    currentFrame <= whackFrameRange[1]) {
+    // Disable further whacks and hide mole
     canWhack = false;
+    isVisible = false;
+    // Play whack animation
+    animation = whackAnimation;
+    animationTicker?.reset(); // Reset whack animation to start from frame 0
+    whackTimer = 0;
 
-    add(
-      MoveByEffect(
-        Vector2(0, 40),
-        EffectController(duration: 0.2),
-        onComplete: () {
-          isVisible = false;
-        },
-      ),
-    );
+    onWhack?.call(); // If we recieved a function called onWhack, call it. (Check constructor)
   }
+}
+  
+  // Starts the pop-up animation
+  void show() {
+  if (isVisible) return;
+  animation = popUpAnimation;
+  animationTicker?.reset();
+  isVisible = true;
+  canWhack = true;
+}
 
   @override
   void update(double dt) {
     super.update(dt);
 
-    if (animation == whackAnimation) {
-      whackElapsed += dt;
-      if (whackElapsed >= whackDuration) {
-        animation = idleAnimation;
-        whackElapsed = 0.0;
-      }
+  if (isCoolingDown) {
+    cooldownTimer += dt;
+    if (cooldownTimer >= cooldownDuration) {
+      cooldownTimer = 0;
+      isCoolingDown = false;
+    }
+  }  
+  // If the mole was whacked, manage the whack animation duration
+  if (animation == whackAnimation) {
+    whackTimer += dt;
+    if (whackTimer >= whackDuration) {
+      animation = idleAnimation;
+      whackTimer = 0;
     }
   }
+
+  // If pop-up animation finished and wasn't hit, return to idle
+  if (animation == popUpAnimation &&
+      (animationTicker?.done() ?? false) &&
+      canWhack) {
+    animation = idleAnimation;
+    isVisible = false;
+    canWhack = false;
+    isCoolingDown = true;
+  }
+}
 }

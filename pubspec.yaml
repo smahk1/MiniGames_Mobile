@@ -19,9 +19,23 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/mole_0.png
-    - assets/images/mole_1.png
-    - assets/images/mole_2.png
-    - assets/images/mole_3.png
-    - assets/images/mole_4.png
+    - assets/images/mole_001.png
+    - assets/images/mole_002.png
+    - assets/images/mole_003.png
+    - assets/images/mole_004.png
+    - assets/images/mole_005.png
+    - assets/images/mole_006.png
+    - assets/images/whacked1.png
+    - assets/images/whacked2.png
+    - assets/images/whacked3.png
+    - assets/images/whacked4.png
+    - assets/images/whacked5.png
+    - assets/images/whacked6.png
+    - assets/images/whacked7.png
+    - assets/images/whacked8.png
+    - assets/images/whacked9.png
+    - assets/images/whacked10.png
+    - assets/images/whacked11.png
+    - assets/images/whacked12.png
+    - assets/images/whacked13.png
     - assets/images/background.png
