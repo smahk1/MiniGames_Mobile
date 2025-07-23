@@ -4,7 +4,12 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:project_mini_games/Game_Components/WAM/mole.dart';
 
-class WhackAMole extends FlameGame {
+// Redo the animation and hit logic
+// upon hit the animation should change to whack then to idle. A sound should also be played to signify the hit.
+// unless hit the mole should return to idle
+// Fix the moles positons as well.
+
+class WhackAMole extends FlameGame{
   final List<Vector2> molePositions = [
     Vector2(100, 350),
     Vector2(220, 370),
@@ -14,7 +19,7 @@ class WhackAMole extends FlameGame {
     Vector2(700, 390),
   ];
   // Decides how many moles to animate at once
-  int animateNum = 2; // For every increment of 1 in [animateNum] decrement the value of [count] in spawnTimer() by 1
+  int animateNum = 2;
 
   final Random rng = Random();
   final double initialTime = 30.0;
@@ -29,6 +34,14 @@ class WhackAMole extends FlameGame {
   int score = 0;
   double timeLeft = 0.0;
   bool gameOver = false;
+
+  @override 
+  void onGameResize(Vector2 size) {
+    double xZoom = size.x / 768;
+    double yZoom = size.y / 448;
+    camera.viewfinder.zoom = max(xZoom, yZoom) + 0.4;
+    super.onGameResize(size); // This is because this method is a must call super method. Read on https://dart.dev/tools/diagnostics/must_call_super
+  }
 
   @override
   Future<void> onLoad() async {
@@ -85,12 +98,11 @@ class WhackAMole extends FlameGame {
   final activeMoles = moles.where((m) => m.isVisible).toList();
 
   if (activeMoles.length < animateNum) {
-    final inactiveMoles = moles.where((m) => !m.isVisible && !m.isCoolingDown).toList();
+    final inactiveMoles = moles.where((m) => !m.isVisible && !m.isCoolingDown).toList(); // Inactive moles is made into a list that stores the number of moles that are inactive.
     inactiveMoles.shuffle();
-    // This ensures that we dont try to display more moles than are available
+    // This ensures that we dont try to display more moles than are available (Clamp checks if the value is withing the range given)
     final count = animateNum.clamp(0, inactiveMoles.length);
-    // For every increment of 1 in [animateNum] decrement the value of [count] by 1
-    // God knows why this works, but it does.
+    // Count stores the length starting from 1 not 0 therefore to itterate the indexes we sub 1.
      for (int i = 0; i < count-1; i++) {
       inactiveMoles[i].show();
     }
@@ -121,14 +133,15 @@ class WhackAMole extends FlameGame {
   // Triggers game over screen and haults the game.
   void endGame() {
     gameOver = true;
-    spawnTimer.stop();
-    gameTimer.stop();
+    pauseGame();
+    //overlays.add('PauseOverlay');
     timerText.text = 'Time: 0';
+
     print('Game Over. Score: $score');
   }
 
   void pauseGame() {
-    pauseEngine();
+    pauseEngine(); // Pre Defined method to pause the game engine.
     spawnTimer.stop();
     gameTimer.stop();
   }

@@ -18,12 +18,14 @@ class GameScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
+          
           GameWidget(
             game: wamGame,
             overlayBuilderMap: {
               'MenuOverlay': (context, gameInstance) {
                 final wamGameInstance = gameInstance as WhackAMole;
                 return MenuOverlay(
+                  // Passing the methods defintions to the overlay
                   onResume: () {
                     wamGameInstance.resumeGame();
                     wamGameInstance.overlays.remove('MenuOverlay');
