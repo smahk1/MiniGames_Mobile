@@ -29,9 +29,6 @@ class Mole extends SpriteAnimationComponent with HasGameReference<WhackAMole>, T
   bool canWhack = false;
   final List<int> whackFrameRange;
 
-  double whackTimer = 0.0;
-  final double whackDuration = 1.0;
-
   @override
 Future<void> onLoad() async {
   final molePopUp = await Future.wait([
@@ -81,7 +78,6 @@ void onTapDown (TapDownEvent event) {
     // Play whack animation
     animation = whackAnimation;
     animationTicker?.reset(); // Reset whack animation to start from frame 0
-    whackTimer = 0;
 
     onWhack?.call(); // If we recieved a function called onWhack, call it. (Check constructor)
   }
@@ -90,8 +86,8 @@ void onTapDown (TapDownEvent event) {
   // Starts the pop-up animation
   void show() {
   if (isVisible) return;
-  animation = popUpAnimation;
   animationTicker?.reset();
+  animation = popUpAnimation;
   isVisible = true;
   canWhack = true;
 }
@@ -108,13 +104,10 @@ void onTapDown (TapDownEvent event) {
     }
   }  
   // If the mole was whacked, manage the whack animation duration
-  if (animation == whackAnimation) {
-    whackTimer += dt;
-    if (whackTimer >= whackDuration) {
-      animation = idleAnimation;
-      whackTimer = 0;
-    }
-  }
+  if (animation == whackAnimation && (animationTicker?.done() ?? false)) {
+  animation = idleAnimation;
+  isCoolingDown = true;
+}
 
   // If pop-up animation finished and wasn't hit, return to idle
   if (animation == popUpAnimation &&

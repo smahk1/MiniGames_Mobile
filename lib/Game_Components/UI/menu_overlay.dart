@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MenuOverlay extends StatelessWidget {
   final VoidCallback onResume;
@@ -58,7 +59,13 @@ class MenuOverlay extends StatelessWidget {
                   child: const Text('Restart'),
                 ),
                 ElevatedButton(
-                  onPressed: onGoHome,
+                  onPressed: () async{
+                    await SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitDown,
+                    DeviceOrientation.portraitUp,
+                  ]);
+                    onGoHome();
+                  },
                   child: const Text('Home'),
                 ),
               ],
