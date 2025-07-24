@@ -1,7 +1,8 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:project_mini_games/Game_Components/UI/menu_overlay.dart';
-import 'package:project_mini_games/Games/whack_a_mole.dart';
+import 'package:project_mini_games/Game_Components/WAM/whack_a_mole.dart';
 
 class GameScreen extends StatelessWidget {
   final FlameGame game;
@@ -25,7 +26,7 @@ class GameScreen extends StatelessWidget {
               'MenuOverlay': (context, gameInstance) {
                 final wamGameInstance = gameInstance as WhackAMole;
                 return MenuOverlay(
-                  // Passing the methods defintions to the overlay
+                  // Passing the methods definitions to the overlay
                   onResume: () {
                     wamGameInstance.resumeGame();
                     wamGameInstance.overlays.remove('MenuOverlay');
@@ -34,7 +35,29 @@ class GameScreen extends StatelessWidget {
                     wamGameInstance.resetGame();
                     wamGameInstance.overlays.remove('MenuOverlay');
                   },
-                  onGoHome: () {
+                  onGoHome: () async {
+                    // Reset orientation before going home
+                    await SystemChrome.setPreferredOrientations([
+                      DeviceOrientation.portraitUp,
+                      DeviceOrientation.portraitDown,
+                    ]);
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  },
+                );
+              },
+              'GameOverOverlay': (context, gameInstance) {
+                final wamGameInstance = gameInstance as WhackAMole;
+                return GameOverOverlay(
+                  finalScore: wamGameInstance.score,
+                  onRestart: () {
+                    wamGameInstance.resetGame();
+                  },
+                  onGoHome: () async {
+                    // Reset orientation before going home
+                    await SystemChrome.setPreferredOrientations([
+                      DeviceOrientation.portraitUp,
+                      DeviceOrientation.portraitDown,
+                    ]);
                     Navigator.of(context).pushReplacementNamed('/home');
                   },
                 );

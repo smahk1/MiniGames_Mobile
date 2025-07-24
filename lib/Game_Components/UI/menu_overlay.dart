@@ -89,3 +89,117 @@ class MenuOverlay extends StatelessWidget {
     );
   }
 }
+
+class GameOverOverlay extends StatelessWidget {
+  final int finalScore;
+  final VoidCallback onRestart;
+  final VoidCallback onGoHome;
+
+  const GameOverOverlay({
+    super.key,
+    required this.finalScore,
+    required this.onRestart,
+    required this.onGoHome,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Game Over Text
+          Text(
+            'GAME OVER',
+            style: TextStyle(
+              fontSize: 48,
+              fontWeight: FontWeight.bold,
+              color: Colors.red[700],
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          
+          // Final Score
+          Text(
+            'Score: $finalScore',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Colors.orange[700],
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(2, 2),
+                  blurRadius: 4,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 40),
+          
+          // Buttons
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Home Button
+              ElevatedButton(
+                onPressed: () async {
+                  await SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitDown,
+                    DeviceOrientation.portraitUp,
+                  ]);
+                  onGoHome();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[600],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  elevation: 5,
+                ),
+                child: const Text(
+                  'HOME',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              
+              // Restart Button
+              ElevatedButton(
+                onPressed: onRestart,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[600],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  elevation: 5,
+                ),
+                child: const Text(
+                  'PLAY AGAIN',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
