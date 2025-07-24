@@ -4,11 +4,6 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:project_mini_games/Game_Components/WAM/mole.dart';
 
-// Redo the animation and hit logic
-// upon hit the animation should change to whack then to idle. A sound should also be played to signify the hit.
-// unless hit the mole should return to idle
-// Fix the moles positons as well.
-
 class WhackAMole extends FlameGame{
   final List<Vector2> molePositions = [
     Vector2(100, 350),
@@ -37,10 +32,24 @@ class WhackAMole extends FlameGame{
 
   @override 
   void onGameResize(Vector2 size) {
-    double xZoom = size.x / 768;
-    double yZoom = size.y / 448;
-    camera.viewfinder.zoom = max(xZoom, yZoom) + 0.4;
-    super.onGameResize(size); // This is because this method is a must call super method. Read on https://dart.dev/tools/diagnostics/must_call_super
+    super.onGameResize(size);
+    // Games dimentions
+    const double gameWidth = 800.0;
+    const double gameHeight = 450.0;
+    
+    // Scale calculation to fit the game withing the screen
+    double scaleX = size.x / gameWidth;
+    double scaleY = size.y / gameHeight;
+    
+    // Using smaller sclale to fit the game
+    double scale = scaleX < scaleY ? scaleX : scaleY;
+    
+    // Reset camera zoom to avoid accumulation
+    camera.viewfinder.zoom = scale;
+    
+    // Center the game on screen
+    camera.viewfinder.position = Vector2.zero();
+
   }
 
   @override
@@ -93,23 +102,23 @@ class WhackAMole extends FlameGame{
     }).toList();
 
     spawnTimer = Timer(0.2, onTick: () {
-  if (gameOver) return;
+      if (gameOver) return;
 
-  final activeMoles = moles.where((m) => m.isVisible).toList();
+      final activeMoles = moles.where((m) => m.isVisible).toList();
 
-  if (activeMoles.length < animateNum) {
-    final inactiveMoles = moles.where((m) => !m.isVisible && !m.isCoolingDown).toList(); // Inactive moles is made into a list that stores the number of moles that are inactive.
-    inactiveMoles.shuffle();
-    // This ensures that we dont try to display more moles than are available (Clamp checks if the value is withing the range given)
-    final count = animateNum.clamp(0, inactiveMoles.length);
-    // Count stores the length starting from 1 not 0 therefore to itterate the indexes we sub 1.
-     for (int i = 0; i < count-1; i++) {
-      inactiveMoles[i].show();
-    }
-  }
-}, repeat: true);
+      if (activeMoles.length < animateNum) {
+        final inactiveMoles = moles.where((m) => !m.isVisible && !m.isCoolingDown).toList();
+        inactiveMoles.shuffle();
+        // FIXED: Remove the -1 here - this was causing one less mole to spawn
+        final count = (animateNum - activeMoles.length).clamp(0, inactiveMoles.length);
+        
+        for (int i = 0; i < count; i++) { // FIXED: Changed from count-1 to count
+          inactiveMoles[i].show();
+        }
+      }
+    }, repeat: true);
 
-    gameTimer = Timer(initialTime, onTick: endGame); // Ends the game when time runs out. The first value defines the time limit for the time.
+    gameTimer = Timer(initialTime, onTick: endGame);
 
     // Start both timers
     spawnTimer.start();
@@ -124,24 +133,25 @@ class WhackAMole extends FlameGame{
       spawnTimer.update(dt);
       gameTimer.update(dt);
 
-      timeLeft -= dt;   // Since time left is a double value it stores only the whole number values of dt in seconds.
+      timeLeft -= dt;
       if (timeLeft < 0) timeLeft = 0;
 
       timerText.text = 'Time: ${timeLeft.toInt()}';
     }
   }
-  // Triggers game over screen and haults the game.
+
   void endGame() {
     gameOver = true;
     pauseGame();
-    //overlays.add('PauseOverlay');
     timerText.text = 'Time: 0';
-
+    
+    // Show game over overlay
+    overlays.add('GameOverOverlay');
     print('Game Over. Score: $score');
   }
 
   void pauseGame() {
-    pauseEngine(); // Pre Defined method to pause the game engine.
+    pauseEngine();
     spawnTimer.stop();
     gameTimer.stop();
   }
@@ -155,6 +165,9 @@ class WhackAMole extends FlameGame{
   }
 
   void resetGame() {
+    // Remove game over overlay if it's showing
+    overlays.remove('GameOverOverlay');
+    
     score = 0;
     timeLeft = initialTime;
     gameOver = false;
@@ -162,8 +175,15 @@ class WhackAMole extends FlameGame{
     scoreText.text = 'Score: 0';
     timerText.text = 'Time: ${initialTime.toInt()}';
 
+    // Reset all moles to their initial state
+    for (final mole in moles) {
+      mole.resetMole();
+    }
+
     resumeEngine();
     spawnTimer..stop()..start();
     gameTimer..stop()..start();
+    
+    print('Game restarted!');
   }
 }

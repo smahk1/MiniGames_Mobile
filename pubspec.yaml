@@ -40,3 +40,4 @@ flutter:
     - assets/images/whacked12.png
     - assets/images/whacked13.png
     - assets/images/background.png
+    - assets/audio/hit_sound_effect.mp3
