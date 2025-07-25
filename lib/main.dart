@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'Screens/home_page.dart';
 import 'Screens/game_select_screen.dart';  // We'll make this later
 
 
-void main() {
+void main() async {
+  
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
   runApp(MiniGames());
 }
 

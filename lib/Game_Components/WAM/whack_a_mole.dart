@@ -34,8 +34,8 @@ class WhackAMole extends FlameGame{
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
     // Games dimentions
-    const double gameWidth = 800.0;
-    const double gameHeight = 450.0;
+    const double gameWidth = 540;
+    const double gameHeight = 960;
     
     // Scale calculation to fit the game withing the screen
     double scaleX = size.x / gameWidth;

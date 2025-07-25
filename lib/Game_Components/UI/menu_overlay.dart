@@ -59,12 +59,14 @@ class MenuOverlay extends StatelessWidget {
                   child: const Text('Restart'),
                 ),
                 ElevatedButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     await SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitDown,
-                    DeviceOrientation.portraitUp,
-                  ]);
-                    onGoHome();
+                      DeviceOrientation.portraitDown,
+                      DeviceOrientation.portraitUp,
+                    ]);
+                    if (context.mounted) {
+                      onGoHome();
+                    }
                   },
                   child: const Text('Home'),
                 ),
@@ -117,7 +119,7 @@ class GameOverOverlay extends StatelessWidget {
               color: Colors.red[700],
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.black.withValues(alpha: 0.5),
                   offset: const Offset(3, 3),
                   blurRadius: 6,
                 ),
@@ -135,7 +137,7 @@ class GameOverOverlay extends StatelessWidget {
               color: Colors.orange[700],
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   offset: const Offset(2, 2),
                   blurRadius: 4,
                 ),
@@ -155,7 +157,9 @@ class GameOverOverlay extends StatelessWidget {
                     DeviceOrientation.portraitDown,
                     DeviceOrientation.portraitUp,
                   ]);
-                  onGoHome();
+                  if (context.mounted) {
+                    onGoHome();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue[600],
