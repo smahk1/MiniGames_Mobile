@@ -25,7 +25,7 @@ flutter_launcher_icons:
   image_path: "assets/images/logo.jpg"
 
 flutter:
-  uses-material-design: trueq
+  uses-material-design: true
   assets:
     - assets/images/mole_001.png
     - assets/images/mole_002.png
@@ -50,3 +50,8 @@ flutter:
     - assets/images/background2.jpg
     - assets/images/splash_background.png
     - assets/audio/hit_sound_effect.mp3
+    - assets/images/splash_background.png 
+    # Baloon Popper assests
+    - assets/images/idle_baloon1.png
+    - assets/images/idle_baloon2.png
+    - assets/images/idle_baloon3.png

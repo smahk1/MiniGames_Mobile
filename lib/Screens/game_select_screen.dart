@@ -1,6 +1,8 @@
 // screens/mini_game_select_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project_mini_games/Game_Components/Baloon_Popper/baloon_game.dart';
+import 'package:project_mini_games/Game_Components/Baloon_Popper/game_screen.dart';
 import 'package:project_mini_games/Game_Components/WAM/whack_a_mole.dart';
 import 'package:project_mini_games/Game_Components/WAM/game_screen.dart';
 
@@ -37,22 +39,22 @@ class MiniGameSelectScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => GameScreen(game: freshGame),
+                    builder: (_) => WamGameScreen(game: freshGame),
                   ),
                 );
               }
             },
           ),
           ListTile(
-            title: Text("Another Game"),
+            title: Text("Baloon Popper"),
             onTap: ()  {
               if (context.mounted) {
                 // Create a completely fresh game instance every time
-                final freshGame = WhackAMole();
+                final freshGame = BaloonGame();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => GameScreen(game: freshGame),
+                    builder: (_) => BaloonGameScreen(game: freshGame),
                   ),
                 );
               }

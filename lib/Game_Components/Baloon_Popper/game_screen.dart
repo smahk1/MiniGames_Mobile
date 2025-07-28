@@ -1,35 +1,31 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project_mini_games/Game_Components/Baloon_Popper/baloon_game.dart';
 import 'package:project_mini_games/Game_Components/UI/menu_overlay.dart';
-import 'package:project_mini_games/Game_Components/WAM/whack_a_mole.dart';
 
-class WamGameScreen extends StatefulWidget {
+class BaloonGameScreen extends StatefulWidget {
   final FlameGame game;
 
-  const WamGameScreen({
-    super.key,
-    required this.game,
-  });
+  const BaloonGameScreen({super.key, required this.game});
 
   @override
-  State<WamGameScreen> createState() => _GameScreenState();
+  State<BaloonGameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<WamGameScreen> {
-  @override
-  void dispose() {
-    final wamGame = widget.game as WhackAMole;
-    wamGame.pauseGame();
-    wamGame.overlays.clear();
-    wamGame.detach();
-    print('Game instance properly disposed');
-    super.dispose();
-  }
+class _GameScreenState extends State<BaloonGameScreen> {
+  // Function called to dispose/end the game instance
+  //@override
+  //void dispose() {
+  //  final baloonGame = widget.game as BaloonGame;
+  //  // Pause the game
+  //  // Clear overlays
+  //  // Detach the game nstance
+  //}
 
   @override
   Widget build(BuildContext context) {
-    final wamGame = widget.game as WhackAMole;
+    final baloonGame = widget.game as BaloonGame;
 
     return PopScope<Object?>(
       canPop: true,
@@ -45,18 +41,18 @@ class _GameScreenState extends State<WamGameScreen> {
         body: Stack(
           children: [
             GameWidget(
-              game: wamGame,
+              game: baloonGame,
               overlayBuilderMap: {
                 'MenuOverlay': (context, gameInstance) {
-                  final wamGameInstance = gameInstance as WhackAMole;
+                  final baloonGameInstance = gameInstance as BaloonGame;
                   return MenuOverlay(
                     onResume: () {
-                      wamGameInstance.resumeGame();
-                      wamGameInstance.overlays.remove('MenuOverlay');
+                      baloonGameInstance.resumeGame();
+                      baloonGameInstance.overlays.remove('MenuOverlay');
                     },
                     onRestart: () {
-                      wamGameInstance.resetGame();
-                      wamGameInstance.overlays.remove('MenuOverlay');
+                      baloonGameInstance.resetGame();
+                      baloonGameInstance.overlays.remove('MenuOverlay');
                     },
                     onGoHome: () {
                       if (context.mounted) {
@@ -66,11 +62,11 @@ class _GameScreenState extends State<WamGameScreen> {
                   );
                 },
                 'GameOverOverlay': (context, gameInstance) {
-                  final wamGameInstance = gameInstance as WhackAMole;
+                  final baloonGameInstance = gameInstance as BaloonGame;
                   return GameOverOverlay(
-                    finalScore: wamGameInstance.score,
+                    finalScore: baloonGameInstance.score,
                     onRestart: () {
-                      wamGameInstance.resetGame();
+                      baloonGameInstance.resetGame();
                     },
                     onGoHome: () {
                       if (context.mounted) {
@@ -87,8 +83,8 @@ class _GameScreenState extends State<WamGameScreen> {
               child: IconButton(
                 icon: const Icon(Icons.pause, color: Colors.white, size: 30),
                 onPressed: () {
-                  wamGame.pauseGame();
-                  wamGame.overlays.add('MenuOverlay');
+                  baloonGame.pauseGame();
+                  baloonGame.overlays.add('MenuOverlay');
                 },
               ),
             ),
