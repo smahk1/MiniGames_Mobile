@@ -11,14 +11,21 @@ dependencies:
     sdk: flutter
   flame: ^1.30.1
   flame_audio: 2.11.8
+  flutter_native_splash: ^2.4.6
+  flutter_launcher_icons: 0.14.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.jpg"
+
 flutter:
-  uses-material-design: true
+  uses-material-design: trueq
   assets:
     - assets/images/mole_001.png
     - assets/images/mole_002.png
@@ -40,4 +47,6 @@ flutter:
     - assets/images/whacked12.png
     - assets/images/whacked13.png
     - assets/images/background.png
+    - assets/images/background2.jpg
+    - assets/images/splash_background.png
     - assets/audio/hit_sound_effect.mp3

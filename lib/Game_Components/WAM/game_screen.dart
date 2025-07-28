@@ -36,8 +36,8 @@ class _GameScreenState extends State<GameScreen> {
       onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (!didPop) {
           await SystemChrome.setPreferredOrientations([
-            DeviceOrientation.portraitUp,
-            DeviceOrientation.portraitDown,
+            DeviceOrientation.landscapeLeft,
+            DeviceOrientation.landscapeRight,
           ]);
         }
       },

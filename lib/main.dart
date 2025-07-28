@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Screens/home_page.dart';
-import 'Screens/game_select_screen.dart';  // We'll make this later
-
+import 'Screens/game_select_screen.dart';
 
 void main() async {
-  
+  WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  runApp(MiniGames());
+  runApp(const MiniGames());
 }
 
 class MiniGames extends StatelessWidget {
@@ -21,10 +20,34 @@ class MiniGames extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Flame Game',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: const HomePage(),
       routes: {
-        '/home': (context) => HomePage(),
-        '/game_select': (context) => MiniGameSelectScreen(),
-  });
+        '/home': (context) => const HomePage(),
+        '/game_select': (context) => const MiniGameSelectScreen(),
+      },
+      theme: ThemeData(
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: NoTransitionsBuilder(),
+            TargetPlatform.iOS: NoTransitionsBuilder(),
+          },
+        ),
+      ),
+    ); // ← this semicolon was incorrectly placed inside the theme before
+  }
+}
+
+class NoTransitionsBuilder extends PageTransitionsBuilder {
+  const NoTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return child;
   }
 }
