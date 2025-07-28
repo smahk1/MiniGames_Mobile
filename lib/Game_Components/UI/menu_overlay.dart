@@ -61,8 +61,8 @@ class MenuOverlay extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     await SystemChrome.setPreferredOrientations([
-                      DeviceOrientation.portraitDown,
-                      DeviceOrientation.portraitUp,
+                      DeviceOrientation.landscapeLeft,
+                      DeviceOrientation.landscapeRight,
                     ]);
                     if (context.mounted) {
                       onGoHome();
@@ -154,8 +154,8 @@ class GameOverOverlay extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   await SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitDown,
-                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.landscapeRight,
                   ]);
                   if (context.mounted) {
                     onGoHome();

@@ -17,8 +17,8 @@ class MiniGameSelectScreen extends StatelessWidget {
           onPressed: () async {
             // Reset to portrait mode when going back
             await SystemChrome.setPreferredOrientations([
-              DeviceOrientation.portraitUp,
-              DeviceOrientation.portraitDown,
+              DeviceOrientation.landscapeLeft,
+              DeviceOrientation.landscapeRight,
             ]);
             if (context.mounted) {
               Navigator.pop(context); // Go back to Home

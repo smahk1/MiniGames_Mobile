@@ -5,21 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:project_mini_games/Game_Components/WAM/mole.dart';
 
 class WhackAMole extends FlameGame{
-  final List<Vector2> molePositions = [
-    Vector2(100, 350),
-    Vector2(220, 370),
-    Vector2(340, 360),
-    Vector2(460, 380),
-    Vector2(580, 370),
-    Vector2(700, 390),
+  // Define mole positions as relative percentages of screen dimensions
+  // Format: [x percentage (0.0-1.0), y percentage (0.0-1.0)]
+  final List<List<double>> moleRelativePositions = [
+    [0.15, 0.4],   // Left side, upper middle
+    [0.35, 0.44],  // Left-center, slightly lower
+    [0.55, 0.41],  // Right-center, middle
+    [0.75, 0.43],  // Right side, slightly lower
+    [0.25, 0.6],   // Left-center, lower
+    [0.65, 0.62],  // Right-center, lower
   ];
+
+  // This will store the actual calculated positions
+  late List<Vector2> molePositions;
+  
   // Decides how many moles to animate at once
   int animateNum = 2;
 
   final Random rng = Random();
   final double initialTime = 30.0;
 
-  late List<Mole> moles;
+  List<Mole> moles = [];
   late Timer spawnTimer;
   late Timer gameTimer;
 
@@ -33,15 +39,15 @@ class WhackAMole extends FlameGame{
   @override 
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
-    // Games dimentions
+    // Games dimensions
     const double gameWidth = 540;
     const double gameHeight = 960;
     
-    // Scale calculation to fit the game withing the screen
+    // Scale calculation to fit the game within the screen
     double scaleX = size.x / gameWidth;
     double scaleY = size.y / gameHeight;
     
-    // Using smaller sclale to fit the game
+    // Using smaller scale to fit the game
     double scale = scaleX < scaleY ? scaleX : scaleY;
     
     // Reset camera zoom to avoid accumulation
@@ -50,12 +56,33 @@ class WhackAMole extends FlameGame{
     // Center the game on screen
     camera.viewfinder.position = Vector2.zero();
 
+    // Recalculate mole positions based on new screen size
+    _calculateMolePositions();
+    
+    // Update existing mole positions if they exist
+    if (moles.isNotEmpty) {
+      for (int i = 0; i < moles.length && i < molePositions.length; i++) {
+        moles[i].position = molePositions[i];
+      }
+    }
+  }
+
+  void _calculateMolePositions() {
+    // Calculate actual positions based on current screen size
+    molePositions = moleRelativePositions.map((relativePos) {
+      double x = size.x * relativePos[0];
+      double y = size.y * relativePos[1];
+      return Vector2(x, y);
+    }).toList();
   }
 
   @override
   Future<void> onLoad() async {
+    // Calculate initial mole positions
+    _calculateMolePositions();
+
     final bg = SpriteComponent()
-      ..sprite = await loadSprite('background.png')
+      ..sprite = await loadSprite('background2.jpg')
       ..size = size
       ..anchor = Anchor.topLeft
       ..priority = -1;
@@ -84,7 +111,7 @@ class WhackAMole extends FlameGame{
     );
     add(timerText);
 
-    // Spawn moles manually by mapping each mole to its position in predefined vector list.
+    // Spawn moles using calculated positions
     moles = molePositions.map((pos) {
       final mole = Mole(
         position: pos,
@@ -109,10 +136,9 @@ class WhackAMole extends FlameGame{
       if (activeMoles.length < animateNum) {
         final inactiveMoles = moles.where((m) => !m.isVisible && !m.isCoolingDown).toList();
         inactiveMoles.shuffle();
-        // FIXED: Remove the -1 here - this was causing one less mole to spawn
         final count = (animateNum - activeMoles.length).clamp(0, inactiveMoles.length);
         
-        for (int i = 0; i < count; i++) { // FIXED: Changed from count-1 to count
+        for (int i = 0; i < count; i++) {
           inactiveMoles[i].show();
         }
       }
