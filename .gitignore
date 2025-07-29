@@ -49,6 +49,12 @@ build/
 /android/app/profile/
 /android/app/release/
 
+# Firebase & Google Cloud configs
+.google-services.json
+.GoogleService-Info.plist
+.firebase_options.dart
+
+
 # -------------------------
 # Flutter Obfuscation & Symbolication
 # -------------------------
