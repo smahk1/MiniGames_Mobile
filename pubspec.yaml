@@ -26,6 +26,13 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/images/logo.jpg"
 
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  color: "#FFD700"
+  background_image: assets/images/background.png 
+
 flutter:
   uses-material-design: true
   assets:

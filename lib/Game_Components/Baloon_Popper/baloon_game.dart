@@ -6,6 +6,8 @@ import 'package:project_mini_games/Game_Components/Baloon_Popper/baloon.dart';
 
 class BaloonGame extends FlameGame{
 
+late Timer gameTimer;
+
 // Variables.
 int score = 0;
 bool gameOver = false;
@@ -15,6 +17,7 @@ late TextComponent scoreText;
 late TextComponent timerText;
 
 final double initialTime = 30.0;
+double timeLeft = 0.0;
 
 
 /// Core game logic for Balloon Popper
@@ -38,7 +41,7 @@ final double initialTime = 30.0;
 
   @override
   Future<void> onLoad() async {
-    
+    timeLeft = initialTime;
     // Load the background
     final bg = SpriteComponent()
       ..sprite = await loadSprite('background.png')
@@ -79,18 +82,58 @@ final double initialTime = 30.0;
   }
   );
   add(baloon);
+
+  gameTimer = Timer(initialTime, onTick: endGame); // Triggers game end.
   }
 
+  @override
+  Future<void> update(double dt) async {
+    super.update(dt);
+    if (!gameOver) {
+      timeLeft -= dt;
+      if (timeLeft < 0) timeLeft = 0;
+
+      timerText.text = 'Time: ${timeLeft.toInt()}';
+    }
+  }
   void resetGame(){
-    // Game reset logic
+    // Remove game over overlay if it's showing
+    overlays.remove('GameOverOverlay');
+    
+    score = 0;
+    timeLeft = initialTime;
+    gameOver = false;
+
+    scoreText.text = 'Score: 0';
+    timerText.text = 'Time: ${initialTime.toInt()}';
+
+    resumeEngine();
+    // spawnTimer..stop()..start();
+    gameTimer..stop()..start();
+    
+    // Reset the baloon positions
   }
   void pauseGame(){
     // Game pause logic
+    pauseEngine();
+    // spawnTimer.stop();
+    gameTimer.stop();
   }
   void resumeGame(){
     // Game resume logic
+    resumeEngine();
+    if (!gameOver) {
+      // spawnTimer.start();
+      gameTimer.start();
+    }
   }
   void endGame(){
-    // Game over logic
+    gameOver = true;
+    pauseGame();
+    timerText.text = 'Time: 0';
+    
+    // Show game over overlay
+    overlays.add('GameOverOverlay');
+    // print('Game Over. Score: $score');
   }
 }

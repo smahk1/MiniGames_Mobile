@@ -31,7 +31,7 @@ class Baloon extends SpriteAnimationComponent with HasGameReference<BaloonGame>,
       Sprite.load('idle_baloon3.png'),
     ]);
 
-    idleAnimation = SpriteAnimation.spriteList(idleSprites, stepTime: 1);
+    idleAnimation = SpriteAnimation.spriteList(idleSprites, stepTime: 0.15);
     animation = idleAnimation;
   }
 
@@ -40,7 +40,7 @@ class Baloon extends SpriteAnimationComponent with HasGameReference<BaloonGame>,
     super.onTapDown(event); 
       // Play whack animation and sound effect
       FlameAudio.play('hit_sound_effect.mp3');
-      print("Mole whacked! Starting whack animation");
+      // print("Mole whacked! Starting whack animation");
       /// Once the baloon is shot we can start the pop animation and with that we can also reset the positon of the baloon to be out of sight.
       /// This way we only need to spawn or create the object once. Asstionally everytime a baloon object is spawned we do that same so that we dont ahve 
       /// create another one of it again.

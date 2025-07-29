@@ -173,7 +173,7 @@ class WhackAMole extends FlameGame{
     
     // Show game over overlay
     overlays.add('GameOverOverlay');
-    print('Game Over. Score: $score');
+    // print('Game Over. Score: $score');
   }
 
   void pauseGame() {
@@ -210,6 +210,6 @@ class WhackAMole extends FlameGame{
     spawnTimer..stop()..start();
     gameTimer..stop()..start();
     
-    print('Game restarted!');
+    // print('Game restarted!');
   }
 }

@@ -89,7 +89,7 @@ class Mole extends SpriteAnimationComponent with HasGameReference<WhackAMole>, T
       // Call the whack callback
       onWhack?.call();
       
-      print("Mole whacked! Starting whack animation");
+      // print("Mole whacked! Starting whack animation");
     }
   }
 
@@ -97,7 +97,7 @@ class Mole extends SpriteAnimationComponent with HasGameReference<WhackAMole>, T
   void show() {
     if (isVisible || isCoolingDown) return;
     
-    print("Showing mole at position: $position");
+    // print("Showing mole at position: $position");
     
     // Reset all states
     wasWhacked = false;
@@ -119,7 +119,7 @@ class Mole extends SpriteAnimationComponent with HasGameReference<WhackAMole>, T
       if (cooldownTimer >= cooldownDuration) {
         cooldownTimer = 0;
         isCoolingDown = false;
-        print("Mole cooldown finished at position: $position");
+        //  print("Mole cooldown finished at position: $position");
       }
     }
     
@@ -129,14 +129,14 @@ class Mole extends SpriteAnimationComponent with HasGameReference<WhackAMole>, T
       
       // Handle pop-up animation completion (mole wasn't hit)
       if (!wasWhacked && animation == popUpAnimation && animationTimer >= popUpDuration) {
-        print("Pop-up animation completed, resetting to idle");
+        // print("Pop-up animation completed, resetting to idle");
         _resetToIdle();
         return;
       }
       
       // Handle whack animation completion
       if (wasWhacked && animation == whackAnimation && animationTimer >= whackDuration) {
-        print("Whack animation completed, resetting to idle");
+        // print("Whack animation completed, resetting to idle");
         _resetToIdle();
         return;
       }

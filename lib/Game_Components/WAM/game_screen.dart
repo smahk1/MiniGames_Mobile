@@ -23,7 +23,7 @@ class _GameScreenState extends State<WamGameScreen> {
     wamGame.pauseGame();
     wamGame.overlays.clear();
     wamGame.detach();
-    print('Game instance properly disposed');
+    // print('Game instance properly disposed');
     super.dispose();
   }
 
