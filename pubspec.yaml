@@ -15,6 +15,11 @@ dependencies:
   flutter_launcher_icons: 0.14.4
   firebase_core: ^4.0.0
   firebase_data_connect: ^0.2.0
+  firebase_database: ^12.0.0
+  firebase_auth: ^6.0.0
+  tflite_flutter: ^0.11.0
+  camera: ^0.11.2
+  image: ^4.3.0
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +41,8 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   assets:
+  # WAM game assets
+    # Mole animation sprites
     - assets/images/mole_001.png
     - assets/images/mole_002.png
     - assets/images/mole_003.png
@@ -55,12 +62,20 @@ flutter:
     - assets/images/whacked11.png
     - assets/images/whacked12.png
     - assets/images/whacked13.png
+    # Good mole animation sprites
+    #
+    #
+    #
+    # Other assets
     - assets/images/background.png
     - assets/images/background2.jpg
     - assets/images/splash_background.png
     - assets/audio/hit_sound_effect.mp3
     - assets/images/splash_background.png 
-    # Baloon Popper assests
+  # Baloon Popper assests
     - assets/images/idle_baloon1.png
     - assets/images/idle_baloon2.png
     - assets/images/idle_baloon3.png
+    # ML Model Assets
+    - assets/attention_ set.tflite
+    - assets/labels.txt
