@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "408145110172",
+    "firebase_url": "https://minigames-adhd-default-rtdb.firebaseio.com",
+    "project_id": "minigames-adhd",
+    "storage_bucket": "minigames-adhd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408145110172:android:362b32143e893f32e0f959",
+        "android_client_info": {
+          "package_name": "com.example.project_mini_games"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0f_jkiMSZnBrMShuS8DNXB2PTk851uZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
