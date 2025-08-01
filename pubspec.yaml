@@ -20,17 +20,19 @@ dependencies:
   tflite_flutter: ^0.11.0
   camera: ^0.11.2
   image: ^4.3.0
+  camera_plugin: ^0.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+# Icon
 flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/images/logo.jpg"
-
+# Splash Screen
 flutter_native_splash:
   android: true
   ios: true
