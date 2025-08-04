@@ -26,9 +26,16 @@ class Baloon extends SpriteAnimationComponent with HasGameReference<BaloonGame>,
    @override
   Future<void> onLoad() async {
     final idleSprites = await Future.wait([
-      Sprite.load('idle_baloon1.png'),
-      Sprite.load('idle_baloon2.png'),
-      Sprite.load('idle_baloon3.png'),
+      Sprite.load('baloon1.png'),
+      Sprite.load('baloon2.png'),
+      Sprite.load('baloon4.png'),
+      Sprite.load('baloon5.png'),
+      Sprite.load('baloon6.png'),
+      Sprite.load('baloon7.png'),
+      Sprite.load('baloon8.png'),
+      Sprite.load('baloon9.png'),
+      Sprite.load('baloon10.png'),
+      Sprite.load('baloon11.png'),      
     ]);
 
     idleAnimation = SpriteAnimation.spriteList(idleSprites, stepTime: 0.15);
