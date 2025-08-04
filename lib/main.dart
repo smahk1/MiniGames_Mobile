@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:project_mini_games/ML_Componenets/camera_service.dart';
 import 'package:project_mini_games/firebase_options.dart';
 import 'Screens/home_page.dart';
 import 'Screens/game_select_screen.dart';
@@ -11,7 +10,6 @@ import 'Screens/game_select_screen.dart';
 List<CameraDescription>? cameras; 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- //await CameraService.initialize();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
