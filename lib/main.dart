@@ -39,7 +39,7 @@ class MiniGames extends StatelessWidget {
           },
         ),
       ),
-    ); // ← this semicolon was incorrectly placed inside the theme before
+    ); 
   }
 }
 

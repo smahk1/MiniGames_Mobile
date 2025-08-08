@@ -16,7 +16,7 @@ class Mole extends SpriteAnimationComponent with HasGameReference<WhackAMole>, T
           position: position ?? Vector2.zero(),
           size: size ?? Vector2.all(50),
           anchor: Anchor.center,
-        );
+        );      
 
   // Animation cooldown
   double cooldownTimer = 0;

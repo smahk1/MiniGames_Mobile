@@ -126,7 +126,7 @@ class WhackAMole extends FlameGame{
       );
       add(mole);
       return mole;
-    }).toList();
+    }).cast<Mole>().toList();
 
     spawnTimer = Timer(0.2, onTick: () {
       if (gameOver) return;
@@ -211,5 +211,11 @@ class WhackAMole extends FlameGame{
     gameTimer..stop()..start();
     
     // print('Game restarted!');
+  }
+
+  /// Emotion based triggers
+  /// These functions will be triggered upon a certain emotion detection in the player.
+  void onHappy(){
+
   }
 }
