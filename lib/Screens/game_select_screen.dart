@@ -5,6 +5,7 @@ import 'package:project_mini_games/Game_Components/Baloon_Popper/baloon_game.dar
 import 'package:project_mini_games/Game_Components/Baloon_Popper/game_screen.dart';
 import 'package:project_mini_games/Game_Components/WAM/whack_a_mole.dart';
 import 'package:project_mini_games/Game_Components/WAM/game_screen.dart';
+import 'package:project_mini_games/Screens/camera_test.dart';
 
 class MiniGameSelectScreen extends StatelessWidget {
   const MiniGameSelectScreen({super.key});
@@ -55,6 +56,21 @@ class MiniGameSelectScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => BaloonGameScreen(game: freshGame),
+                  ),
+                );
+              }
+            },
+          ),
+          ListTile(
+            title: Text("Emotion Detection"),
+            subtitle: Text("Real-time emotion recognition"),
+            leading: Icon(Icons.mood),
+            onTap: () {
+              if (context.mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EmotionDetectionPage(),
                   ),
                 );
               }
