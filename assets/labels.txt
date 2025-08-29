@@ -1,2 +1,6 @@
 0 Attentive
-1 Unattentive
+1 Inattentive
+2 Happy
+3 Sad
+4 Disgust
+5 Angry 
